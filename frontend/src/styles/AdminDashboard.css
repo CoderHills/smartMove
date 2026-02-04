@@ -1,0 +1,266 @@
+.admin-dashboard-main {
+  flex: 1;
+  margin-left: 250px;
+  padding: 40px;
+  background: var(--bg-light);
+}
+
+.admin-dashboard-main h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: var(--text-dark);
+}
+
+.stat-change {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.stat-change.positive {
+  color: var(--success-green);
+}
+
+.stat-change.negative {
+  color: var(--danger-red);
+}
+
+.admin-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.badge {
+  padding: 4px 12px;
+  background: #fef3c7;
+  color: #d97706;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.view-all {
+  font-size: 14px;
+  color: var(--primary-blue);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.view-all:hover {
+  color: var(--primary-blue-dark);
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px;
+  background: var(--bg-light);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-gray);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.data-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.data-table tbody tr:hover {
+  background: var(--bg-light);
+}
+
+.company-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.company-info strong {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.company-info .email {
+  font-size: 13px;
+  color: var(--text-gray);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-success-sm, .btn-danger-sm {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-success-sm {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.btn-success-sm:hover {
+  background: #a7f3d0;
+}
+
+.btn-danger-sm {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-danger-sm:hover {
+  background: #fecaca;
+}
+
+.health-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-light);
+  border-radius: 8px;
+}
+
+.metric-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-icon.success {
+  background: #d1fae5;
+  color: var(--success-green);
+}
+
+.metric-icon.warning {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+
+.metric-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.quick-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-item span {
+  color: var(--text-gray);
+}
+
+.stat-item strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.top-movers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mover-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-light);
+  border-radius: 8px;
+}
+
+.mover-item .rank {
+  width: 32px;
+  height: 32px;
+  background: var(--primary-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.mover-item .mover-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mover-item .mover-info strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.mover-item .mover-info span {
+  font-size: 12px;
+  color: var(--text-gray);
+}

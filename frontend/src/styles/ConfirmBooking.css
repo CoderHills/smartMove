@@ -1,0 +1,213 @@
+.confirm-booking-main {
+  flex: 1;
+  margin-left: 250px;
+  padding: 40px;
+  background: var(--bg-light);
+  max-width: 1000px;
+}
+
+.confirm-booking-main h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-dark);
+}
+
+.confirmation-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 8px;
+  color: #065f46;
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.confirmation-alert svg {
+  color: var(--success-green);
+}
+
+.booking-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.booking-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-dark);
+}
+
+.mover-info-card,
+.details-card,
+.price-breakdown-card {
+  background: var(--bg-white);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.mover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.mover-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.total-price {
+  text-align: right;
+}
+
+.price-label {
+  font-size: 12px;
+  color: var(--text-gray);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.price-amount {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+
+.mover-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.rating span {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.rating .reviews {
+  font-weight: 400;
+  color: var(--text-gray);
+}
+
+.contact {
+  font-size: 14px;
+  color: var(--text-gray);
+}
+
+.detail-row {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row svg {
+  color: var(--text-gray);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.detail-label {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.detail-extra {
+  font-size: 13px;
+  color: var(--text-gray);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.price-row:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.price-row.subtotal {
+  font-weight: 600;
+  border-top: 2px solid var(--border-color);
+  margin-top: 8px;
+  padding-top: 16px;
+}
+
+.price-row.total {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  border-top: 2px solid var(--border-color);
+  margin-top: 8px;
+  padding-top: 16px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--primary-blue);
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.confirm-btn:hover {
+  background: var(--primary-blue-dark);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--text-gray);
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: var(--text-dark);
+}
