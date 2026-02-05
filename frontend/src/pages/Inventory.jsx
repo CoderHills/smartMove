@@ -13,11 +13,41 @@ const Inventory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchTemplates = async () => {
       try {
         const data = await inventoryService.getTemplates();
-        setTemplates(data.templates || {});
+        const templatesData = data.templates || {};
+        setTemplates(templatesData);
+        
+        // Set items from templates or use default items
+        const roomTypeMap = {
+          'Bedsitter': 'bedsitter',
+          'Studio': 'studio',
+          '1BR': '1_bedroom',
+          '2BR': '2_bedroom'
+        };
+        
+        const currentRoomType = roomTypeMap['1BR']; // Default to 1BR
+        const defaultItems = {
+          'Bed (Queen/King)': 0,
+          'Mattress': 0,
+          'Wardrobe': 0,
+          'Desk': 0,
+          'Office Chair': 0,
+          'Sofa': 0,
+          'Coffee Table': 0,
+          'TV Stand': 0,
+          'Dining Table': 0,
+          'Dining Chairs (4)': 0,
+          'Bookshelves': 0,
+          'Kitchenware': 0,
+          'Boxes': 0
+        };
+        
+        // Use items from template if available, otherwise use default
+        const roomItems = templatesData[currentRoomType] || {};
+        setItems(roomItems.items || defaultItems);
       } catch (err) {
         console.error('Failed to fetch templates:', err);
         // Use default items on error

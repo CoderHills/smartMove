@@ -68,7 +68,7 @@ const Home = () => {
 
           <div className="hero-image">
             <div className="image-card">
-              <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=700&fit=crop" alt="Modern living room" />
+              <img src="/landingpage.webp" alt="SmartMove Moving Services" />
             </div>
           </div>
         </div>

@@ -27,7 +27,7 @@ def create_app(config_name=None):
     jwt.init_app(app)
     bcrypt.init_app(app)
     
-    # Configure CORS
+# Configure CORS
     CORS(app, resources={
         r"/api/*": {
             "origins": [
@@ -39,6 +39,14 @@ def create_app(config_name=None):
                 "http://127.0.0.1:5175",
                 "http://localhost:5176",
                 "http://127.0.0.1:5176",
+                "http://localhost:5177",
+                "http://127.0.0.1:5177",
+                "http://localhost:5179",
+                "http://127.0.0.1:5179",
+                "http://localhost:5180",
+                "http://127.0.0.1:5180",
+                "http://localhost:5181",
+                "http://127.0.0.1:5181",
                 "http://localhost:3000",
                 "http://127.0.0.1:3000"
             ],

@@ -1,76 +1,109 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { CheckCircle, MapPin, Calendar, Star, ArrowLeft } from 'lucide-react';
+import { Package, Calendar, MapPin, DollarSign, CheckCircle } from 'lucide-react';
+import AuthContext from '../contexts/AuthContext';
 import { bookingService } from '../services/bookingService';
 import '../styles/ConfirmBooking.css';
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
-  const [selectedMover, setSelectedMover] = useState(null);
-  const [inventoryData, setInventoryData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [bookingData, setBookingData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Get stored data
-    const mover = sessionStorage.getItem('selectedMover');
-    const inventory = sessionStorage.getItem('inventoryData');
-
-    if (mover) {
-      setSelectedMover(JSON.parse(mover));
+    // Load data from sessionStorage
+    const inventoryData = sessionStorage.getItem('inventoryData');
+    const moverData = sessionStorage.getItem('selectedMover');
+    
+    if (!inventoryData || !moverData) {
+      // Redirect back if no data
+      navigate('/inventory');
+      return;
     }
-    if (inventory) {
-      setInventoryData(JSON.parse(inventory));
-    }
-  }, []);
 
-  // Calculate total price
+    const parsedInventory = JSON.parse(inventoryData);
+    const parsedMover = JSON.parse(moverData);
+    
+    setBookingData({
+      inventory: parsedInventory,
+      mover: parsedMover,
+      pickup: sessionStorage.getItem('pickupLocation') || '123 Main Street, Nairobi',
+      dropoff: sessionStorage.getItem('dropoffLocation') || '456 Oak Avenue, Westlands',
+      date: sessionStorage.getItem('moveDate') || 'February 15, 2026',
+      time: sessionStorage.getItem('moveTime') || '09:00'
+    });
+    
+    setLoading(false);
+  }, [navigate]);
+
   const calculateTotal = () => {
+    if (!bookingData) return 0;
+    
     const distanceKm = 12.5; // Mock distance
-    const volume = inventoryData?.estimatedVolume || 9;
-    const basePrice = distanceKm * (selectedMover?.base_price_per_km || 500);
+    const volume = bookingData.inventory.estimatedVolume || 9;
+    const mover = bookingData.mover;
+    
+    const basePrice = distanceKm * (mover.base_price_per_km || 500);
     const laborCost = 2000;
     const packingCost = volume * 100;
+    
     return basePrice + laborCost + packingCost;
   };
 
-  const handleConfirm = async () => {
-    setLoading(true);
+  const handleConfirmBooking = async () => {
+    setSubmitting(true);
     setError(null);
 
     try {
-      // Create booking via API
-      const bookingData = {
-        moverId: selectedMover?.id,
-        pickupAddress: '123 Main Street, Nairobi',
-        pickupFloor: 'Ground Floor',
-        pickupDetails: 'Building A',
-        dropoffAddress: '456 Oak Avenue, Westlands',
-        dropoffFloor: '2nd Floor',
-        dropoffDetails: 'Apartment 204',
-        scheduledDate: '2026-02-15',
-        scheduledTime: '09:00',
-        distanceKm: 12.5,
-        totalVolume: inventoryData?.estimatedVolume || 9,
-        specialInstructions: '',
+      const data = {
+        pickup_location: bookingData.pickup,
+        dropoff_location: bookingData.dropoff,
+        move_date: sessionStorage.getItem('moveDate'),
+        move_time: sessionStorage.getItem('moveTime'),
+        mover_id: bookingData.mover.id,
+        inventory: bookingData.inventory.items,
+        estimated_volume: bookingData.inventory.estimatedVolume,
+        total_amount: calculateTotal()
       };
 
-      const response = await bookingService.createBooking(bookingData);
+      await bookingService.createBooking(data);
       
-      // Store booking for tracking
-      sessionStorage.setItem('currentBooking', JSON.stringify(response.booking));
+      // Clear session storage
+      sessionStorage.removeItem('inventoryData');
+      sessionStorage.removeItem('selectedMover');
+      sessionStorage.removeItem('pickupLocation');
+      sessionStorage.removeItem('dropoffLocation');
+      sessionStorage.removeItem('moveDate');
+      sessionStorage.removeItem('moveTime');
       
-      // Navigate to tracking
-      navigate('/tracking');
+      // Navigate to dashboard with success message
+      navigate('/dashboard', { state: { bookingSuccess: true } });
     } catch (err) {
       console.error('Failed to create booking:', err);
-      // For demo, still navigate to tracking
-      navigate('/tracking');
+      setError(err.response?.data?.error || 'Failed to create booking. Please try again.');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
+
+  const handleBack = () => {
+    navigate('/booking');
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard-layout">
+        <Sidebar />
+        <main className="confirm-booking-main">
+          <div className="loading">Loading booking details...</div>
+        </main>
+      </div>
+    );
+  }
 
   const total = calculateTotal();
 
@@ -80,111 +113,128 @@ const ConfirmBooking = () => {
       <main className="confirm-booking-main">
         <h1>Confirm Your Booking</h1>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="error-message">{error}</div>
+        )}
 
-        <div className="confirmation-alert">
-          <CheckCircle size={20} />
-          <span>
-            You've selected {selectedMover?.company_name || 'Swift Movers Ltd'} for your move
-          </span>
-        </div>
-
-        <div className="booking-sections">
-          <div className="booking-section">
-            <h2>Selected Mover</h2>
-            <div className="mover-info-card">
-              <div className="mover-header">
-                <h3>{selectedMover?.company_name || 'Swift Movers Ltd'}</h3>
-                <p className="total-price">
-                  <span className="price-label">Total Price</span>
-                  <span className="price-amount">KES {total.toLocaleString()}</span>
-                </p>
-              </div>
-              <div className="mover-details">
-                <div className="rating">
-                  <Star size={16} fill="#FFC107" color="#FFC107" />
-                  <span>{selectedMover?.rating || 4.8}</span>
-                  <span className="reviews">
-                    ({selectedMover?.total_jobs_completed || 124} reviews)
-                  </span>
+        <div className="confirm-content">
+          <div className="confirm-main">
+            {/* Move Details */}
+            <div className="confirm-card">
+              <h2>Move Details</h2>
+              <div className="detail-grid">
+                <div className="detail-item">
+                  <MapPin size={20} />
+                  <div>
+                    <p className="detail-label">Pickup Location</p>
+                    <p className="detail-value">{bookingData.pickup}</p>
+                  </div>
                 </div>
-                <p className="contact">Contact: +254 700 123 456</p>
+                <div className="detail-item">
+                  <MapPin size={20} />
+                  <div>
+                    <p className="detail-label">Drop-off Location</p>
+                    <p className="detail-value">{bookingData.dropoff}</p>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <Calendar size={20} />
+                  <div>
+                    <p className="detail-label">Move Date</p>
+                    <p className="detail-value">{bookingData.date}</p>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <Calendar size={20} />
+                  <div>
+                    <p className="detail-label">Time</p>
+                    <p className="detail-value">{bookingData.time}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Selected Mover */}
+            <div className="confirm-card">
+              <h2>Selected Mover</h2>
+              <div className="mover-summary">
+                <h3>{bookingData.mover.company_name}</h3>
+                <p className="mover-rating">⭐ {bookingData.mover.rating} ({bookingData.mover.total_jobs_completed} jobs)</p>
+                <p className="mover-time">Estimated time: {bookingData.mover.estimated_time}</p>
+              </div>
+            </div>
+
+            {/* Inventory Summary */}
+            <div className="confirm-card">
+              <h2>Inventory Summary</h2>
+              <div className="inventory-summary">
+                <div className="inventory-stats">
+                  <div className="stat">
+                    <Package size={20} />
+                    <span>Room Type: <strong>{bookingData.inventory.roomType}</strong></span>
+                  </div>
+                  <div className="stat">
+                    <Package size={20} />
+                    <span>Total Items: <strong>{bookingData.inventory.totalItems}</strong></span>
+                  </div>
+                  <div className="stat">
+                    <Package size={20} />
+                    <span>Estimated Volume: <strong>{bookingData.inventory.estimatedVolume}m³</strong></span>
+                  </div>
+                </div>
+                <button className="edit-btn" onClick={() => navigate('/inventory')}>
+                  Edit Inventory
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="booking-section">
-            <h2>Move Details</h2>
-            <div className="details-card">
-              <div className="detail-row">
-                <MapPin size={20} />
-                <div>
-                  <p className="detail-label">Pickup Address</p>
-                  <p className="detail-value">123 Main Street, Nairobi</p>
-                  <p className="detail-extra">Ground Floor, Building A</p>
-                </div>
-              </div>
-              <div className="detail-row">
-                <MapPin size={20} />
-                <div>
-                  <p className="detail-label">Drop-off Address</p>
-                  <p className="detail-value">456 Oak Avenue, Westlands</p>
-                  <p className="detail-extra">2nd Floor, Apartment 204</p>
-                </div>
-              </div>
-              <div className="detail-row">
-                <Calendar size={20} />
-                <div>
-                  <p className="detail-label">Move Date & Time</p>
-                  <p className="detail-value">February 15, 2026 at 9:00 AM</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="booking-section">
-            <h2>Price Breakdown</h2>
-            <div className="price-breakdown-card">
+          {/* Price Summary Sidebar */}
+          <div className="confirm-sidebar">
+            <div className="price-card">
+              <h3>Price Summary</h3>
+              
               <div className="price-row">
-                <span>Base Moving Fee</span>
-                <span>KES {(total - 3000).toLocaleString()}</span>
+                <span>Base Price ({12.5}km)</span>
+                <span>KES {(12.5 * bookingData.mover.base_price_per_km).toLocaleString()}</span>
               </div>
+              
               <div className="price-row">
-                <span>Labor (3 workers)</span>
+                <span>Labor Cost</span>
                 <span>KES 2,000</span>
               </div>
+              
               <div className="price-row">
-                <span>Packing Materials</span>
-                <span>KES 1,000</span>
+                <span>Packing ({bookingData.inventory.estimatedVolume}m³)</span>
+                <span>KES {(bookingData.inventory.estimatedVolume * 100).toLocaleString()}</span>
               </div>
-              <div className="price-row subtotal">
-                <span>Subtotal</span>
-                <span>KES {total.toLocaleString()}</span>
-              </div>
-              <div className="price-row">
-                <span>Service Fee</span>
-                <span>KES 0</span>
-              </div>
-              <div className="price-row total">
+              
+              <div className="price-divider"></div>
+              
+              <div className="price-total">
                 <span>Total</span>
                 <span>KES {total.toLocaleString()}</span>
               </div>
+
+              <div className="price-note">
+                <CheckCircle size={16} />
+                <span>Free cancellation before 24 hours</span>
+              </div>
+
+              <div className="confirm-actions">
+                <button className="back-btn" onClick={handleBack} disabled={submitting}>
+                  Back
+                </button>
+                <button 
+                  className="confirm-btn" 
+                  onClick={handleConfirmBooking}
+                  disabled={submitting}
+                >
+                  {submitting ? 'Confirming...' : 'Confirm Booking'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="action-buttons">
-          <button 
-            className="confirm-btn" 
-            onClick={handleConfirm}
-            disabled={loading}
-          >
-            {loading ? 'Confirming...' : 'Confirm Booking'}
-          </button>
-          <button className="back-btn" onClick={() => navigate('/booking')}>
-            <ArrowLeft size={16} />
-            Back to Movers
-          </button>
         </div>
       </main>
     </div>
@@ -192,4 +242,3 @@ const ConfirmBooking = () => {
 };
 
 export default ConfirmBooking;
-

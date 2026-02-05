@@ -12,6 +12,11 @@ import ConfirmBooking from './pages/ConfirmBooking';
 import MoverDashboard from './pages/MoverDashboard';
 import MoverJobs from './pages/MoverJobs';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminUsers from './pages/AdminUsers';
+import AdminMovers from './pages/AdminMovers';
+import AdminBookings from './pages/AdminBookings';
+import AdminAnalytics from './pages/AdminAnalytics';
+import AdminSettings from './pages/AdminSettings';
 
 function App() {
   return (
@@ -120,7 +125,7 @@ function App() {
             path="/admin/users"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
+                <AdminUsers />
               </ProtectedRoute>
             }
           />
@@ -128,7 +133,7 @@ function App() {
             path="/admin/movers"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
+                <AdminMovers />
               </ProtectedRoute>
             }
           />
@@ -136,7 +141,7 @@ function App() {
             path="/admin/bookings"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
+                <AdminBookings />
               </ProtectedRoute>
             }
           />
@@ -144,7 +149,7 @@ function App() {
             path="/admin/analytics"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
+                <AdminAnalytics />
               </ProtectedRoute>
             }
           />
@@ -152,7 +157,7 @@ function App() {
             path="/admin/settings"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
+                <AdminSettings />
               </ProtectedRoute>
             }
           />
